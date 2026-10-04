@@ -161,10 +161,7 @@ public partial class Register
         {
             InvalidForm();
             return;
-        }
-
-        userDTO.UserType = UserType.User;
-        userDTO.UserName = userDTO.Email;
+        }       
 
         if (IsAdmin)
         {
@@ -172,6 +169,8 @@ public partial class Register
         }
 
         loading = true;
+        userDTO.UserType = UserType.User;
+        userDTO.UserName = userDTO.Email;
         var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/api/accounts/CreateUser", userDTO);
         loading = false;
         if (responseHttp.Error)
@@ -181,7 +180,7 @@ public partial class Register
             return;
         }
 
-        await LoginService.LoginAsync(responseHttp.Response!.Token);
+        Snackbar.Add("Su cuenta ha sido creada con éxito. Se te ha enviado un correo electrónico con las instrucciones para activar tu usuario.", Severity.Success);
         NavigationManager.NavigateTo("/");
     }
 }
